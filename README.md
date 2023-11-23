@@ -2,7 +2,8 @@
 
 #### 介绍
 一键安装：
-`bash <(curl -sS http://download.leapteam.cn/mfbackup.sh)`
+`bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <服务器IP> <SSH用户名> <SSH密码>
+`
 
 #### 软件架构
 软件架构说明
