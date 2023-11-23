@@ -10,8 +10,7 @@
 
 一键使用：
 
-`
-脚本：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <服务器IP> <SSH用户名> <SSH密码>  <最大文件大小> <备份目录>
+`脚本：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <服务器IP> <SSH用户名> <SSH密码>  <最大文件大小> <备份目录>
 
 实例：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 50G /home/mfbackup
 
