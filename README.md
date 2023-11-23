@@ -12,3 +12,13 @@
 `示例：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 50G /home/mfbackup`
 
 最大文件大小要带单位，如50M或50G，目录为备份的目录，使用绝对路径，/代表根目录
+
+计划任务：
+
+需要备份的服务器终端输入：`crontab -e`
+
+然后在编辑模式下添加下面内容
+
+`0 0 * * 7 bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 50G /home/mfbackup`
+
+这代表是每周日（星期日，7表示星期日）的午夜（小时和分钟都是0）执行备份计划。
