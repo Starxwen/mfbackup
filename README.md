@@ -10,9 +10,8 @@
 
 一键使用：
 
-`脚本：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <服务器IP> <SSH用户名> <SSH密码>  <最大文件大小> <备份目录>
+`脚本：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <服务器IP> <SSH用户名> <SSH密码>  <最大文件大小> <备份目录>`
 
-实例：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 50G /home/mfbackup
+`示例：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 50G /home/mfbackup`
 
 最大文件大小要带单位，如50M或50G 备份目录为绝对路径，/代表根目录
-`
