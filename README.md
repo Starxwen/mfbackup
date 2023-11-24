@@ -21,4 +21,6 @@
 
 `0 0 * * 7 bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 50G /home/mfbackup`
 
+分钟 小时 日期 月份 星期 （crontab表达式）
+
 这代表是每周日（星期日，7表示星期日）的午夜（小时和分钟都是0）执行备份计划。
