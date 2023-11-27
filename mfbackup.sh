@@ -1,7 +1,6 @@
 #!/bin/bash
 
-echo "魔方备份脚本"
-echo "作者：星跃云"
+echo "魔方云备份脚本 作者：星跃云"
 
 if [ "$#" -ne 6 ]; then
     echo "用法: bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <远程IP> <SSH用户名> <SSH密码> <远程SSH端口> <最大文件大小> <远程备份目录>"
@@ -36,15 +35,27 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Use find to get a list of files smaller than the specified size (excluding the specified directories)
-find "$SOURCE_DIR" -type f \( -not -path "$EXCLUDE_DIR/*" \) -size -"$MAX_SIZE" |
+# Convert MAX_SIZE to bytes
+case $MAX_SIZE in
+  *[gG]) MAX_SIZE=$(echo "$MAX_SIZE" | tr -d 'G' | awk '{printf "%.0f\n", $1 * 1024^3}');;
+  *[mM]) MAX_SIZE=$(echo "$MAX_SIZE" | tr -d 'M' | awk '{printf "%.0f\n", $1 * 1024^2}');;
+  *[kK]) MAX_SIZE=$(echo "$MAX_SIZE" | tr -d 'K' | awk '{printf "%.0f\n", $1 * 1024}');;
+  *) MAX_SIZE=$(echo "$MAX_SIZE" | tr -d 'B');;
+esac
+
+# Use find to get a list of files (excluding the specified directories)
+find "$SOURCE_DIR" -type f \( -not -path "$EXCLUDE_DIR/*" \) |
 while IFS= read -r file; do
   # Adjust the source path to remove /home/kvm
   relative_path="${file#$SOURCE_DIR/}"
 
-  echo "正在备份文件: $file"
-  sshpass -p "$SSH_PASSWORD" rsync -a --progress --rsync-path="mkdir -p \"$REMOTE_BACKUP_DIR/\$(dirname $relative_path)\" && rsync" -e "ssh -p $REMOTE_SSH_PORT" "$file" "$SSH_USERNAME@$REMOTE_SERVER_IP:$REMOTE_BACKUP_DIR/$relative_path"
-  echo "备份完成: $file"
+  # Check file size with stat and compare against MAX_SIZE
+  file_size=$(stat -c %s "$file")
+  if [ "$file_size" -le "$MAX_SIZE" ]; then
+    echo "正在备份文件: $file"
+    sshpass -p "$SSH_PASSWORD" rsync -a --progress --rsync-path="mkdir -p \"$REMOTE_BACKUP_DIR/\$(dirname $relative_path)\" && rsync" -e "ssh -p $REMOTE_SSH_PORT" "$file" "$SSH_USERNAME@$REMOTE_SERVER_IP:$REMOTE_BACKUP_DIR/$relative_path"
+    echo "备份完成: $file"
+  fi
 done
 
 echo "全部文件备份完成."
