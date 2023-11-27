@@ -29,6 +29,13 @@ if ! command -v sshpass &> /dev/null; then
     echo "sshpass installed successfully."
 fi
 
+# SSH连接测试
+sshpass -p "$SSH_PASSWORD" ssh -p "$REMOTE_SSH_PORT" "$SSH_USERNAME@$REMOTE_SERVER_IP" true
+if [ $? -ne 0 ]; then
+    echo "SSH连接测试失败，请检查连接配置，备份中止。"
+    exit 1
+fi
+
 # Use find to get a list of files smaller than the specified size (excluding the specified directories)
 find "$SOURCE_DIR" -type f \( -not -path "$EXCLUDE_DIR/*" \) -size -"$MAX_SIZE" |
 while IFS= read -r file; do
