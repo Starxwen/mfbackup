@@ -3,16 +3,17 @@
 echo "魔方备份脚本"
 echo "作者：星跃云"
 
-if [ "$#" -ne 5 ]; then
-    echo "用法: bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <远程IP> <SSH用户名> <SSH密码> <最大文件大小> <远程备份目录>"
+if [ "$#" -ne 6 ]; then
+    echo "用法: bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <远程IP> <SSH用户名> <SSH密码> <远程SSH端口> <最大文件大小> <远程备份目录>"
     exit 1
 fi
 
 REMOTE_SERVER_IP="$1"
 SSH_USERNAME="$2"
 SSH_PASSWORD="$3"
-MAX_SIZE="$4"
-REMOTE_BACKUP_DIR="$5"
+REMOTE_SSH_PORT="$4"
+MAX_SIZE="$5"
+REMOTE_BACKUP_DIR="$6"
 SOURCE_DIR="/home/kvm"
 EXCLUDE_DIR="/home/kvm/images"
 
@@ -35,8 +36,8 @@ while IFS= read -r file; do
   relative_path="${file#$SOURCE_DIR/}"
 
   echo "正在备份文件: $file"
-  sshpass -p "$SSH_PASSWORD" rsync -a --progress --rsync-path="mkdir -p \"$REMOTE_BACKUP_DIR/\$(dirname $relative_path)\" && rsync" "$file" "$SSH_USERNAME@$REMOTE_SERVER_IP:$REMOTE_BACKUP_DIR/$relative_path"
+  sshpass -p "$SSH_PASSWORD" rsync -a --progress --rsync-path="mkdir -p \"$REMOTE_BACKUP_DIR/\$(dirname $relative_path)\" && rsync" -e "ssh -p $REMOTE_SSH_PORT" "$file" "$SSH_USERNAME@$REMOTE_SERVER_IP:$REMOTE_BACKUP_DIR/$relative_path"
   echo "备份完成: $file"
 done
 
-echo "备份完成."
+echo "全部文件备份完成."
