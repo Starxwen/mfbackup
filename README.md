@@ -36,4 +36,6 @@ chmod +x mfbackup.sh
 
 分钟 小时 日期 月份 星期 （crontab表达式）
 
-上面代码代表是每3天的凌晨3点0分执行备份计划，并输出到/root/mfbackup+时间.log文件下面。
+上面代码代表是每3天的凌晨3点0分执行备份计划，并输出到/root/mfbackuplogs/时间.log文件下面
+
+注意：mfbackuplogs目录需要手动先创建，也可以手动更改路径或者取消输出该日志，创建命令：`mkdir -p /root/mfbackuplogs`
