@@ -17,12 +17,23 @@
 
 计划任务：
 
-需要备份的服务器终端输入：`crontab -e`
+在root目录执行下面内容：
 
-然后在编辑模式下添加下面内容
 
-`0 0 * * 7 bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 22 50G /home/mfbackup`
+```
+curl -O http://download.leapteam.cn/mfbackup.sh
+chmod +x mfbackup.sh
+```
+
+上面可以偶尔执行一遍，以保证该文件是最新版本~
+
+然后输入：`crontab -e`
+
+在编辑模式下添加下面内容
+
+`0 3 */3 * * /bin/bash /root/mfbackup.sh 192.168.1.1 root 123456 22 50G /home/mfbackup >> /root/mfbackuplogs/$(date +\%Y\%m\%d_\%H\%M\%S).log 2>&1
+`
 
 分钟 小时 日期 月份 星期 （crontab表达式）
 
-这代表是每周日（星期日，7表示星期日）的午夜（小时和分钟都是0）执行备份计划。
+上面代码代表是每3天的凌晨3点0分执行备份计划，并输出到/root/mfbackup+时间.log文件下面。
