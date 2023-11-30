@@ -52,10 +52,13 @@ while IFS= read -r file; do
   # Check file size with stat and compare against MAX_SIZE
   file_size=$(stat -c %s "$file")
   if [ "$file_size" -le "$MAX_SIZE" ]; then
-    echo "正在备份文件: $file"
+    current_time=$(date +"[%H:%M:%S]")
+    echo "$current_time 正在备份文件: $file"
     sshpass -p "$SSH_PASSWORD" rsync -a --progress --rsync-path="mkdir -p \"$REMOTE_BACKUP_DIR/\$(dirname $relative_path)\" && rsync" -e "ssh -p $REMOTE_SSH_PORT" "$file" "$SSH_USERNAME@$REMOTE_SERVER_IP:$REMOTE_BACKUP_DIR/$relative_path"
-    echo "备份完成: $file"
+    current_time=$(date +"[%H:%M:%S]")
+    echo "$current_time 备份完成: $file"
   fi
 done
 
-echo "全部文件备份完成."
+current_time=$(date +"[%H:%M:%S]")
+echo "$current_time 全部文件备份完成."
