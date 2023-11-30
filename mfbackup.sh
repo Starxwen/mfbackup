@@ -35,6 +35,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# 删除远程服务器的REMOTE_BACKUP_DIR文件夹
+sshpass -p "$SSH_PASSWORD" ssh -p "$REMOTE_SSH_PORT" "$SSH_USERNAME@$REMOTE_SERVER_IP" "rm -rf $REMOTE_BACKUP_DIR"
+
 # Convert MAX_SIZE to bytes
 case $MAX_SIZE in
   *[gG]) MAX_SIZE=$(echo "$MAX_SIZE" | tr -d 'G' | awk '{printf "%.0f\n", $1 * 1024^3}');;
@@ -55,7 +58,6 @@ while IFS= read -r file; do
     current_time=$(date +"[%H:%M:%S]")
     echo "$current_time 正在备份文件: $file"
     sshpass -p "$SSH_PASSWORD" rsync -a --progress --rsync-path="mkdir -p \"$REMOTE_BACKUP_DIR/\$(dirname $relative_path)\" && rsync" -e "ssh -p $REMOTE_SSH_PORT" "$file" "$SSH_USERNAME@$REMOTE_SERVER_IP:$REMOTE_BACKUP_DIR/$relative_path"
-    current_time=$(date +"[%H:%M:%S]")
     echo "$current_time 备份完成: $file"
   fi
 done
