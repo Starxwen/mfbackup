@@ -7,7 +7,7 @@
 
 一键使用：
 
-`脚本：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <IP> <SSH用户名> <SSH密码> <SSH端口> <最大文件大小> <目录>`
+`脚本：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <IP> <SSH用户名> <SSH密码> <SSH端口> <最大文件大小> <备份目录>`
 
 `示例：bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) 192.168.1.1 root 123456 22 50G /home/mfbackup`
 
@@ -39,3 +39,5 @@ chmod +x mfbackup.sh
 上面代码代表是每3天的凌晨3点0分执行备份计划，并输出到/root/mfbackuplogs/时间.log文件下面
 
 注意：mfbackuplogs目录需要手动先创建，也可以手动更改路径或者取消输出该日志，创建命令：`mkdir -p /root/mfbackuplogs`
+
+注意：新版本中备份前会删除<备份目录>，不删的话可能有已删除的小鸡备份一直保留，以后可能会优化这个问题，暂时先删除老备份。
