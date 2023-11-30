@@ -18,25 +18,27 @@ EXCLUDE_DIR="/home/kvm/images"
 
 # Check if sshpass is installed, if not, try to install it
 if ! command -v sshpass &> /dev/null; then
-    echo "sshpass is not installed. Attempting to install..."
+    echo "检测到没有安装sshpass. 即将进行安装..."
     sudo yum install -y sshpass
     # If installation fails, exit with an error
     if [ $? -ne 0 ]; then
-        echo "Failed to install sshpass. Please install it manually."
+        echo "安装 sshpass 失败. 请尝试手动安装."
         exit 1
     fi
-    echo "sshpass installed successfully."
+    echo "sshpass 安装成功."
 fi
 
 # SSH连接测试
 sshpass -p "$SSH_PASSWORD" ssh -p "$REMOTE_SSH_PORT" "$SSH_USERNAME@$REMOTE_SERVER_IP" true
 if [ $? -ne 0 ]; then
-    echo "SSH连接测试失败，请检查连接配置，备份中止。"
+    echo "SSH连接测试失败，请检查连接配置，备份中止"
     exit 1
 fi
 
 # 删除远程服务器的REMOTE_BACKUP_DIR文件夹
+echo "执行删除原备份文件夹"
 sshpass -p "$SSH_PASSWORD" ssh -p "$REMOTE_SSH_PORT" "$SSH_USERNAME@$REMOTE_SERVER_IP" "rm -rf $REMOTE_BACKUP_DIR"
+echo "删除原备份文件夹成功!"
 
 # Convert MAX_SIZE to bytes
 case $MAX_SIZE in
