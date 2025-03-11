@@ -3,10 +3,10 @@
 echo "魔方云备份脚本 作者：星跃云"
 
 if [ "$#" -ne 6 ]; then
-    echo "用法: bash <(curl -sS http://download.leapteam.cn/mfbackup.sh) <远程IP> <SSH用户名> <SSH密码> <远程SSH端口> <最大文件大小> <远程备份目录>"
+    echo "用法: bash <(curl -sS http://mirrors.xwyue.com/mfbackup.sh) <远程IP> <SSH用户名> <SSH密码> <远程SSH端口> <最大文件大小> <远程备份目录>"
     exit 1
 fi
-
+start_time=$(date +%s)
 REMOTE_SERVER_IP="$1"
 SSH_USERNAME="$2"
 SSH_PASSWORD="$3"
@@ -65,4 +65,10 @@ while IFS= read -r file; do
 done
 
 current_time=$(date +"[%H:%M:%S]")
-echo "$current_time 全部文件备份完成."
+end_time=$(date +%s)
+elapsed_time=$((end_time - start_time))
+hours=$((elapsed_time / 3600))
+minutes=$(( (elapsed_time % 3600) / 60 ))
+seconds=$((elapsed_time % 60))
+ 
+printf "%s全部文件备份完成,总用时:%02d时%02d分%02d秒\n" $current_time $hours $minutes $seconds
